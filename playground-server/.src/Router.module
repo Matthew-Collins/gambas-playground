@@ -1,0 +1,36 @@
+' Gambas module file
+
+Public Sub Main()
+
+  Select Case CGI!PATH_INFO
+    Case "/"
+      If Request.Method = "POST" Then
+        ScriptController.RunScript()
+      Else
+        Status(405)
+      Endif
+    Default
+      Status(404)
+  End Select
+
+  
+End
+
+' Private Sub Render(Data As Collection)
+' 
+'   Response.ContentType = "application/json"
+'   Response.Begin
+'   Print JSON.Encode(Data)
+'   Response.End
+' 
+' End
+
+Private Sub Status(Code As Integer, Optional Cause As String)
+
+  Response.ContentType = "application/json"
+  Response.Status = Code
+  Response.Begin
+  If Cause Then Print JSON.Encode(["error": Cause])
+  Response.End
+
+End
