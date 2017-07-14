@@ -2,6 +2,8 @@
 
 Public Sub Main()
 
+  Response.AddHeader("Access-Control-Allow-Origin", "*")
+
   Select Case CGI!PATH_INFO
     Case "/"
       If Request.Method = "POST" Then
