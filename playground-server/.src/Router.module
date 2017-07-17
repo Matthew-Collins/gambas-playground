@@ -1,7 +1,6 @@
 ' Gambas module file
 
 Public Sub Main()
-
   Response.AddHeader("Access-Control-Allow-Origin", "*")
 
   Select Case CGI!PATH_INFO

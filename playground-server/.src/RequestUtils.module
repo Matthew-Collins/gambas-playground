@@ -5,7 +5,7 @@ Private $sBuffer As String
 
 Private Sub Decode()
 
-  If Not Lof() Then Return
+  If Eof() Then Return
   While Not Eof()
     $sBuffer &= Read -4096
   Wend

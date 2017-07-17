@@ -1,8 +1,3 @@
-/* blue : #2980b9
-    orange: #e88b39
-    background: #e1ddd9
- */
-
 @keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -14,7 +9,6 @@
     }
 }
 
-
 html, body, #main {
     height: 100%;
     display: flex;
@@ -25,10 +19,7 @@ html, body, #main {
 }
 
 body {
-    background: #e1ddd9;
-    background-image: url('gambas.png');
-    background-repeat: no-repeat;
-    background-position: right -40px;
+    background: #e1ddd9 url('gambas.png') no-repeat right -40px;
 }
 
 #main, #output {
@@ -115,10 +106,13 @@ header, #output h2 {
 }
 
 header {
+    display: flex;
+    align-items: center;
     padding: .5em 1em;
 }
 
-header button {
+header button, header nav a {
+    display: inline-block;
     background: white;
     border: solid 1px #2980b9;
     border-radius: 5px;
@@ -127,6 +121,20 @@ header button {
     white-space: nowrap;
     font-size: 12pt;
     transition: all .25s ease-in-out;
+}
+
+header nav {
+    margin: 0 250px 0 auto;
+}
+
+header nav a {
+    background: #e1ddd9;
+    border: 0;
+    color: #222;
+}
+
+header nav a:hover {
+    color: #2980b9;
 }
 
 #run-code {
