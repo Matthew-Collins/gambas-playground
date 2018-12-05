@@ -1,5 +1,10 @@
-# To Build "gbs3" Image:
+# To Build "gbs3" Image
 
-In Terminal: docker build -t gbs3 .
+Install Docker:
+sudo apt-get install docker docker.io
 
-To Check: docker images
+In Terminal: 
+docker build -t gbs3 .
+
+To Check:
+docker images
