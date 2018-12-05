@@ -1,0 +1,86 @@
+' Gambas module file
+
+Const TIMEOUT As Integer = 3000
+Const STDOUT_LIMIT As Integer = 2048
+
+Private $runner As Process
+Private $timeout As New Timer As "Timeout"
+Private $sContainerId As String
+Private $iStdoutLen As Integer
+
+Public Sub RunScript()
+
+  Dim stdin As String = Trim(RequestUtils.Body)
+
+  Response.ContentType = "text/plain"
+  Response.Begin()
+  If Not stdin Then
+    Response.End
+    Return
+  Endif
+
+  Exec ["docker", "create",
+        "--cap-drop=ALL",
+        "--cpus=1",
+        "--memory=16m",
+        "--net=none",
+        "--pids-limit=20",
+        "--security-opt=no-new-privileges",
+        "--interactive",
+        "prokopyl/playground"] To $sContainerId
+  $sContainerId = Trim($sContainerId)
+
+  $runner = Exec ["docker", "start", "--attach", "--interactive", $sContainerId] For Read Write As "Runner"
+
+  Write #$runner, stdin, Len(stdin)
+  $timeout.Delay = TIMEOUT
+  $timeout.Start
+  $runner.CloseInput
+
+End
+
+Public Sub Main()
+  
+  RunScript()
+  
+End
+
+Public Sub Runner_Read()
+  
+  Dim len As Integer = Lof($runner)
+  
+  If len + $iStdoutLen > STDOUT_LIMIT Then
+    Print Read #$runner, - STDOUT_LIMIT - $iStdoutLen
+    Print "-----8<----- Output has been truncated ("; STDOUT_LIMIT; " bytes max) -----8<-----"
+    $runner.Close
+    $runner.Kill
+  Else
+    Print Read #$runner, len;
+    $iStdoutLen += len
+  Endif
+  
+End
+
+Public Sub Runner_Error(stderr As String)
+  
+  Print stderr;
+  
+End
+
+Public Sub Runner_Kill()
+
+  Response.End()
+  $timeout.Stop
+  Exec ["docker", "rm", "--force", $sContainerId] For Read
+
+End
+
+Public Sub Timeout_Timer()
+  
+  Print "\nProcess timed out !"
+  Exec ["docker", "kill", $sContainerId] For Read
+  $runner.Kill
+  
+End
+
+
