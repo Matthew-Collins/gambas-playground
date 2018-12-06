@@ -35,14 +35,14 @@ document.addEventListener("DOMContentLoaded", function() {
 		outputContainer.className = 'visible';
 		outputContents.className = 'loading';
 		xhr.onreadystatechange = function() {
-			if(xhr.readyState !== XMLHttpRequest.DONE) return;
-			if(xhr.status === 200) {
-				outputContents.textContent = xhr.responseText;
+			if(this.readyState !== XMLHttpRequest.DONE) return;
+			if(this.status === 200) {
+				outputContents.textContent = this.responseText;
 			} else {
-				outputContents.textContent = 'Server returned with error ' + xhr.status + ' : \n\n' + xhr.responseText;
+				outputContents.textContent = 'Server returned with error ' + this.status + ' : \n\n' + this.responseText;
 			}
 			outputContents.className = '';
-		};
+		}.bind(xhr)
 		xhr.open('POST', REMOTE_URI, true);
 		xhr.send(editor.getValue());
 	}
