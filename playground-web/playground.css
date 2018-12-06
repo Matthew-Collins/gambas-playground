@@ -19,7 +19,7 @@ html, body, #main {
 }
 
 body {
-    background: #e1ddd9 url('gambas.png') no-repeat right -40px;
+    background: #FFA500 url('gambas.png') no-repeat right -40px;
 }
 
 #main, #output {
@@ -138,9 +138,9 @@ header nav a:hover {
 }
 
 #run-code {
-    background: #e88b39;
-    border-color: #e88b39;
-    color: white;
+    background: #00FF7F;
+    border-color: #000000;
+    color: black;
     font-weight: bold;
     font-size: 14pt;
     margin-right: 3em;
