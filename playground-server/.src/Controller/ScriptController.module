@@ -1,16 +1,18 @@
 ' Gambas module file
 
-Const TIMEOUT As Integer = 3000
-Const STDOUT_LIMIT As Integer = 2048
+Const TIMEOUT As Integer = 5000
+Const STDOUT_LIMIT As Integer = 4096
 
 Private $runner As Process
 Private $timeout As New Timer As "Timeout"
 Private $sContainerId As String
 Private $iStdoutLen As Integer
 
-Public Sub RunScript()
+Public Sub RunScript(Optional stdin As String = "")
 
-  Dim stdin As String = Trim(RequestUtils.Body)
+  If stdin = "" Then
+    stdin = Trim(RequestUtils.Body)
+  Endif
 
   Response.ContentType = "text/plain"
   Response.Begin()
@@ -19,23 +21,18 @@ Public Sub RunScript()
     Return
   Endif
 
-  Exec ["docker", "create",
-        "--cap-drop=ALL",
-        "--cpus=1",
-        "--memory=16m",
-        "--net=none",
-        "--pids-limit=20",
-        "--security-opt=no-new-privileges",
-        "--interactive",
-        "prokopyl/playground"] To $sContainerId
+  Shell "docker create --cap-drop=ALL --cpus=1 --memory=16m --net=none --pids-limit=20 --security-opt=no-new-privileges --interactive gbs3" To $sContainerId
   $sContainerId = Trim($sContainerId)
+  
+  If Not Exist(User.home &/ "scripts") Then Mkdir User.home &/ "scripts"
+  File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", stdin)
+  Shell "docker cp " &/ User.home &/ "scripts" &/ $sContainerId & ".gbs " & $sContainerId & ":script.gbs" Wait
+  Try Kill User.home &/ "scripts" &/ $sContainerId & ".gbs"
 
-  $runner = Exec ["docker", "start", "--attach", "--interactive", $sContainerId] For Read Write As "Runner"
+  $runner = Shell "docker start --attach --interactive " & $sContainerId For Read As "Runner"
 
-  Write #$runner, stdin, Len(stdin)
   $timeout.Delay = TIMEOUT
   $timeout.Start
-  $runner.CloseInput
 
 End
 

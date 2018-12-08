@@ -1,37 +1,98 @@
 ' Gambas module file
 
 Public Sub Main()
+  
+  Dim Code As String
+  
   Response.AddHeader("Access-Control-Allow-Origin", "*")
-
-  Select Case CGI!PATH_INFO
+  
+  LogIt
+  
+  Select Case LCase(CGI!PATH_INFO)
     Case "/"
       If Request.Method = "POST" Then
         ScriptController.RunScript()
+        
+      Else If LCase(CGI!QUERY_STRING) Begins "gist="
+        Code = GetGist(Split(CGI!QUERY_STRING, "=")[1])
+        
+        Response.ContentType = "text/plain"
+        Response.Begin()
+        Print "Code:" & gb.NewLine & Code
+        Response.End
+        
+        ScriptController.RunScript(Code)
+        
       Else
         Status(405)
+        
       Endif
+    Case "/test"
+      ScriptController.RunScript("Print \"Hello world from Gambas Playground Server!\"")
+      
+    Case "/bigtest"
+      ScriptController.RunScript(File.Load("BigTest.gbs"))
+      
+    Case "/info"
+      Response.ContentType = "text/plain"
+      Response.Begin()
+      Print "User " & User.Name & " " & Time(Now)
+      Response.End
+      
     Default
       Status(404)
   End Select
-
   
 End
 
-' Private Sub Render(Data As Collection)
-' 
-'   Response.ContentType = "application/json"
-'   Response.Begin
-'   Print JSON.Encode(Data)
-'   Response.End
-' 
-' End
-
 Private Sub Status(Code As Integer, Optional Cause As String)
-
+  
   Response.ContentType = "application/json"
   Response.Status = Code
   Response.Begin
   If Cause Then Print JSON.Encode(["error": Cause])
   Response.End
-
+  
 End
+
+Public Sub GetGist(GistId As String) As String                                  'To 'Get' stuff from the web
+  
+  Dim hClient As HttpClient                                                     'To create a HTTP Client
+  Dim sResult As String                                                         
+  Dim vResult As Variant
+  Dim sContent As String
+  Dim vFile As Variant
+  Dim vItem As Variant
+  
+  hClient = New HttpClient As "hClient"                                         'Create a HTTP Client
+  With hClient                                                                  'With the Client..
+    .URL = "https://api.github.com/gists/" & GistId                             'Set up the URL
+    .Async = False                                                              'No Asynchronous transmission
+    .TimeOut = 60                                                               'Don't hang around waiting for more than 60 seconds
+    .get                                                                        'Get the data
+  End With
+  
+  If Lof(hClient) Then sResult = Read #hClient, Lof(hClient)                    'When all the data is downloaded store it in sResult
+  
+  vResult = JSON.Decode(sResult, False)
+  
+  For Each vFile In vResult["files"]
+    sContent = vFile["content"]
+    Break
+  Next
+ 
+  Return sContent
+  
+End
+
+Public Sub LogIt()
+
+  Dim sStore As String
+  
+  If Not Exist(User.home &/ "logs") Then Mkdir User.home &/ "logs"
+  If Exist(User.home &/ "logs/log.csv") Then sStore = File.Load(User.home &/ "logs/log.csv")
+  sStore &= Format(Now, "dddd dd/mm/yyyy - hh:nn:ss") & "," & CGI!REMOTE_ADDR & gb.NewLine
+  File.Save(User.Home &/ "logs/log.csv", sStore)
+  
+End
+
