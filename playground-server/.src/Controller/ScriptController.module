@@ -14,7 +14,7 @@ Public Sub RunScript(Optional stdin As String = "")
     stdin = Trim(RequestUtils.Body)
   Endif
 
-  If RequestUtils.Parameter("ShowCode", False) Then
+  If RequestUtils.IsParameter("ShowCode", False) Then
     Response.ContentType = "text/plain"
     Response.Begin()
     Print "Code:" & gb.NewLine
@@ -24,6 +24,7 @@ Public Sub RunScript(Optional stdin As String = "")
 
   Response.ContentType = "text/plain"
   Response.Begin()
+  Print "Result:" & gb.NewLine
   If Not stdin Then
     Response.End
     Return
@@ -31,7 +32,7 @@ Public Sub RunScript(Optional stdin As String = "")
 
   Shell "docker create --cap-drop=ALL --cpus=1 --memory=16m --net=none --pids-limit=20 --security-opt=no-new-privileges --interactive gbs3" To $sContainerId
   $sContainerId = Trim($sContainerId)
-  
+
   If Not Exist(User.home &/ "scripts") Then Mkdir User.home &/ "scripts"
   File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", stdin)
   Shell "docker cp " &/ User.home &/ "scripts" &/ $sContainerId & ".gbs " & $sContainerId & ":script.gbs" Wait
@@ -45,15 +46,15 @@ Public Sub RunScript(Optional stdin As String = "")
 End
 
 Public Sub Main()
-  
+
   RunScript()
-  
+
 End
 
 Public Sub Runner_Read()
-  
+
   Dim len As Integer = Lof($runner)
-  
+
   If len + $iStdoutLen > STDOUT_LIMIT Then
     Print Read #$runner, - STDOUT_LIMIT - $iStdoutLen
     Print "-----8<----- Output has been truncated ("; STDOUT_LIMIT; " bytes max) -----8<-----"
@@ -63,13 +64,13 @@ Public Sub Runner_Read()
     Print Read #$runner, len;
     $iStdoutLen += len
   Endif
-  
+
 End
 
 Public Sub Runner_Error(stderr As String)
-  
+
   Print stderr;
-  
+
 End
 
 Public Sub Runner_Kill()
@@ -81,11 +82,11 @@ Public Sub Runner_Kill()
 End
 
 Public Sub Timeout_Timer()
-  
+
   Print "\nProcess timed out !"
   Exec ["docker", "kill", $sContainerId] For Read
   $runner.Kill
-  
+
 End
 
 
