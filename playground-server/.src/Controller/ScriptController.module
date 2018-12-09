@@ -14,6 +14,14 @@ Public Sub RunScript(Optional stdin As String = "")
     stdin = Trim(RequestUtils.Body)
   Endif
 
+  If RequestUtils.Parameter("ShowCode", False) Then
+    Response.ContentType = "text/plain"
+    Response.Begin()
+    Print "Code:" & gb.NewLine
+    Print stdin
+    Response.End
+  End If
+
   Response.ContentType = "text/plain"
   Response.Begin()
   If Not stdin Then

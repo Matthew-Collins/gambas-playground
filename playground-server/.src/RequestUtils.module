@@ -12,10 +12,37 @@ Private Sub Decode()
 
 End
 
-
 Private Function Body_Read() As String
 
   Decode
   Return $sBuffer
 
+End
+
+Public Function ContainsParameter(KeyName As String) As Boolean
+  Dim KeyPair As String
+  Dim Key As String
+  For Each KeyPair In Split(CGI!QUERY_STRING, "&")
+    Key = Split(KeyPair, "=")
+    If Key.Max = 1 And If String.Comp(Key[0], KeyName, gb.IgnoreCase) Then
+      Return True
+    End If
+  Next
+  Return False
+End
+
+Public Function Parameter(KeyName As String, DefaultValue as String) As String
+  Dim KeyPair As String
+  Dim Key As String
+  For Each KeyPair In Split(CGI!QUERY_STRING, "&")
+    Key = Split(KeyPair, "=")
+    If Key.Max = 1 And If String.Comp(Key[0], KeyName, gb.IgnoreCase) Then
+      Return Key[1]
+    End If
+  Next
+  Return DefaultValue
+End
+
+Public Function IsParameter(KeyName As String, DefaultValue as Boolean) As Boolean
+  Return UCase(Parameter(KeyName, DefaultValue) Begins "T"
 End

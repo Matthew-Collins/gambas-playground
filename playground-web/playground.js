@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			}
 			outputContents.className = '';
 		}.bind(xhr)
-		xhr.open('POST', REMOTE_URI, true);
+		xhr.open('POST', REMOTE_URI + '?ShowCode=T', true);
 		xhr.send(editor.getValue());
 	}
 

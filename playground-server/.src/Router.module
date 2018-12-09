@@ -13,20 +13,14 @@ Public Sub Main()
       If Request.Method = "POST" Then
         ScriptController.RunScript()
         
-      Else If LCase(CGI!QUERY_STRING) Begins "gist="
-        Code = GetGist(Split(CGI!QUERY_STRING, "=")[1])
-        
-        Response.ContentType = "text/plain"
-        Response.Begin()
-        Print "Code:" & gb.NewLine & Code
-        Response.End
-        
-        ScriptController.RunScript(Code)
+      Else If RequestUtils.ContainsParameter,"gist"))
+        ScriptController.RunScript(RequestUtils.Parameter,"gist"))
         
       Else
         Status(405)
         
       Endif
+      
     Case "/test"
       ScriptController.RunScript("Print \"Hello world from Gambas Playground Server!\"")
       
