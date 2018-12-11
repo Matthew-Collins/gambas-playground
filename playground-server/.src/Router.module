@@ -2,17 +2,19 @@
 
 Public Sub Main()
 
-  Response.AddHeader("Access-Control-Allow-Origin", "*")
+  Dim Stream As Stream
 
   LogIt
-
+  
+  Print(CGI!PATH_INFO)
   Select Case LCase(CGI!PATH_INFO)
+  
     Case "/"
       If Request.Method = "POST" Then
         ScriptController.RunScript()
 
       Else If RequestUtils.ContainsParameter("gist")
-        ScriptController.RunScript(GetGist(RequestUtils.Parameter("gist")))
+        ScriptController.RunScript(GetGist(RequestUtils.Parameter("gist")), True)
 
       Else
         Status(405)
@@ -23,14 +25,15 @@ Public Sub Main()
       ScriptController.RunScript("Print \"Hello world from Gambas Playground Server!\"")
 
     Case "/bigtest"
-      ScriptController.RunScript(File.Load("BigTest.gbs"))
+      ScriptController.RunScript(File.Load("BigTest.gbs"), True)
 
     Case "/info"
-      Response.ContentType = "text/plain"
-      Response.Begin()
-      Print "User " & User.Name & " " & Time(Now)
-      Response.End
-
+      Stream = New Stream
+      Stream.WriteLine("User: " & User.Name)
+      Stream.WriteLine("Time: " & Now)
+      Stream.WriteLine("IP:   " & CGI!REMOTE_ADDR)
+      Stream.Send
+      
     Default
       Status(404)
   End Select
@@ -39,11 +42,9 @@ End
 
 Private Sub Status(Code As Integer, Optional Cause As String)
 
-  Response.ContentType = "application/json"
-  Response.Status = Code
-  Response.Begin
-  If Cause Then Print JSON.Encode(["error": Cause])
-  Response.End
+  Dim Stream As New Stream("application/json", Code)
+  If Cause Then Stream.WriteLine(JSON.Encode(["error": Cause]))
+  Stream.Send
 
 End
 
@@ -82,7 +83,7 @@ Public Sub LogIt()
 
   If Not Exist(User.home &/ "logs") Then Mkdir User.home &/ "logs"
   If Exist(User.home &/ "logs/log.csv") Then sStore = File.Load(User.home &/ "logs/log.csv")
-  sStore &= Format(Now, "dddd dd/mm/yyyy - hh:nn:ss") & "," & CGI!REMOTE_ADDR & gb.NewLine
+  sStore &= Format(Now, "dddd dd/mm/yyyy - hh:nn:ss") & "," & CGI!REMOTE_ADDR & "," CGI!PATH_INFO & gb.NewLine
   File.Save(User.Home &/ "logs/log.csv", sStore)
 
 End

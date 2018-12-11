@@ -8,33 +8,33 @@ Private $timeout As New Timer As "Timeout"
 Private $sContainerId As String
 Private $iStdoutLen As Integer
 
-Public Sub RunScript(Optional stdin As String = "")
+Private Stream as New Stream
 
-  If stdin = "" Then
-    stdin = Trim(RequestUtils.Body)
+Public Sub RunScript(Optional Code As String = "", ShowCodeDefault as Boolean= False) 
+
+  If Code = "" Then
+    Code = Trim(RequestUtils.Body)
   Endif
 
-  If RequestUtils.IsParameter("ShowCode", False) Then
-    Response.ContentType = "text/plain"
-    Response.Begin()
-    Print "Code:" & gb.NewLine
-    Print stdin
-    Response.End
-  End If
-
-  Response.ContentType = "text/plain"
-  Response.Begin()
-  Print "Result:" & gb.NewLine
+  If RequestUtils.IsParameter("ShowCode", ShowCodeDefault) Then
+    Stream.WriteLine("Code:" & gb.NewLine)
+    Stream.WriteLine(Code)
+    Stream.Send
+  End if
+  
+  Stream.WriteLine("Result:")
   If Not stdin Then
-    Response.End
+    Stream.Send
     Return
   Endif
 
   Shell "docker create --cap-drop=ALL --cpus=1 --memory=16m --net=none --pids-limit=20 --security-opt=no-new-privileges --interactive gbs3" To $sContainerId
   $sContainerId = Trim($sContainerId)
+  
+  Print "Container: " & sContainerId
 
   If Not Exist(User.home &/ "scripts") Then Mkdir User.home &/ "scripts"
-  File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", stdin)
+  File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", Code)
   Shell "docker cp " &/ User.home &/ "scripts" &/ $sContainerId & ".gbs " & $sContainerId & ":script.gbs" Wait
   Try Kill User.home &/ "scripts" &/ $sContainerId & ".gbs"
 
@@ -69,13 +69,13 @@ End
 
 Public Sub Runner_Error(stderr As String)
 
-  Print stderr;
+  Stream.Write(Print stderr)
 
 End
 
 Public Sub Runner_Kill()
 
-  Response.End()
+  Stream.Send
   $timeout.Stop
   Exec ["docker", "rm", "--force", $sContainerId] For Read
 
@@ -83,7 +83,7 @@ End
 
 Public Sub Timeout_Timer()
 
-  Print "\nProcess timed out !"
+  Stream.WriteLine("\nProcess timed out !")
   Exec ["docker", "kill", $sContainerId] For Read
   $runner.Kill
 

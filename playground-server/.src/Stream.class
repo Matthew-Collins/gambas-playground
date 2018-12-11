@@ -1,0 +1,32 @@
+ContentType As String
+Content As String
+Status As Integer
+
+Sub init(OPTIONAL sContentType As String = "text/plain", iStatus = 0)
+  Me.ContentType = sContentType
+  Me.Status = iStatus
+End
+
+Public Sub Write(Value As as String)
+  Content &= Value
+End
+
+Public Sub WriteLine(Value As String)
+  Content &= Value & gb.NewLine
+End
+
+Public Sub Send(Optional ClearAfterSend) As Boolean = False)
+  Response.Begin
+  Response.Status = Me.Status
+  Response.AddHeader("Access-Control-Allow-Origin", "*")
+  Response.ContentType(Me.ContentType)
+  Print Content
+  Response.End
+  If ClearAfterSend Then 
+    Me.Clear
+  End
+End 
+
+Public Clear()
+  Me.Content = ""
+End
