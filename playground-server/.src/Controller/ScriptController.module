@@ -8,9 +8,9 @@ Private $timeout As New Timer As "Timeout"
 Private $sContainerId As String
 Private $iStdoutLen As Integer
 
-Private Responder as New Responder
+Private Responder As New Responder
 
-Public Sub RunScript(Optional Code As String = "", ShowCodeDefault as Boolean= False) 
+Public Sub RunScript(Optional Code As String = "", ShowCodeDefault As Boolean = False)
 
   If Code = "" Then
     Code = Trim(RequestUtils.Body)
@@ -20,18 +20,18 @@ Public Sub RunScript(Optional Code As String = "", ShowCodeDefault as Boolean= F
     Responder.WriteLine("Code:" & gb.NewLine)
     Responder.WriteLine(Code)
     Responder.Respond
-  End if
-  
-  Stream.WriteLine("Result:")
-  If Not stdin Then
+  End If
+
+  Responder.WriteLine("Result:")
+  If Not Code Then
     Responder.Respond
     Return
   Endif
 
   Shell "docker create --cap-drop=ALL --cpus=1 --memory=16m --net=none --pids-limit=20 --security-opt=no-new-privileges --interactive gbs3" To $sContainerId
   $sContainerId = Trim($sContainerId)
-  
-  Print "Container: " & sContainerId
+
+  Print "Container: " & $sContainerId
 
   If Not Exist(User.home &/ "scripts") Then Mkdir User.home &/ "scripts"
   File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", Code)
@@ -54,14 +54,17 @@ End
 Public Sub Runner_Read()
 
   Dim len As Integer = Lof($runner)
+  Dim data As String
 
   If len + $iStdoutLen > STDOUT_LIMIT Then
-    Responder.Write(Read #$runner, - STDOUT_LIMIT - $iStdoutLen)
-    Responder.WriteLine("-----8<----- Output has been truncated ("; STDOUT_LIMIT; " bytes max) -----8<-----")
+    data = Read #$runner, - STDOUT_LIMIT - $iStdoutLen
+    Responder.WriteLine(data)
+    Responder.WriteLine("-----8<----- Output has been truncated (" & STDOUT_LIMIT & " bytes max) -----8<-----")
     $runner.Close
     $runner.Kill
   Else
-    Ressponder.Write(Print Read #$runner, len)
+    data = Read #$runner, len
+    Responder.Write(data)
     $iStdoutLen += len
   Endif
 
@@ -69,7 +72,7 @@ End
 
 Public Sub Runner_Error(stderr As String)
 
-  Responder.Write(Print stderr)
+  Responder.Write(stderr)
 
 End
 

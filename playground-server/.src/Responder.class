@@ -1,39 +1,53 @@
+' Gambas class file
+
 Public ContentType As String
 Public Content As String
 Public Status As Integer
 
-Sub init(Optional sContentType As String = "text/plain",Optional iStatus = 0)
+Public Sub New(Optional sContentType As String = "text/plain", Optional iStatus As Integer = 0)
+
   Me.ContentType = sContentType
   Me.Status = iStatus
+
 End
 
 Public Sub Write(Value As String)
+
   Content &= Value
+
 End
 
 Public Sub WriteLine(Value As String)
+
   Content &= Value & gb.NewLine
+
 End
 
-Public FromFile(FileName as String)
-  If lcase(FileName) Ends "html"
+Public Sub LoadFile(FileName As String)
+
+  If LCase(FileName) Ends "html"
     Me.ContentType = "text/html"
-  EndIf
+  Endif
   Me.Content &= File.Load(FileName)
+
 End
 
-Public Sub Respond(Optional ClearAfterSend) As Boolean = False)
+Public Sub Respond(Optional ClearAfterSend As Boolean = False)
+
   Response.Begin
   Response.Status = Me.Status
   Response.AddHeader("Access-Control-Allow-Origin", "*")
-  Response.ContentType(Me.ContentType)
+  Response.ContentType = Me.ContentType
   Print Content
   Response.End
-  If ClearAfterSend Then 
+  If ClearAfterSend Then
     Me.Clear
-  End
-End 
+  Endif
 
-Public Clear()
+End
+
+Public Sub Clear()
+
   Me.Content = ""
+
 End

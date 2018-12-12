@@ -5,10 +5,10 @@ Public Sub Main()
   Dim Responder As Responder
 
   LogIt
-  
-  Print(CGI!PATH_INFO)
+
+  Print CGI!PATH_INFO
   Select Case LCase(CGI!PATH_INFO)
-  
+
     Case "/"
       If Request.Method = "POST" Then
         ScriptController.RunScript()
@@ -35,7 +35,7 @@ Public Sub Main()
       Responder.WriteLine("Time: " & Now)
       Responder.WriteLine("IP:   " & CGI!REMOTE_ADDR)
       Responder.Respond
-      
+
     Default
       Status(404)
   End Select
@@ -44,7 +44,10 @@ End
 
 Private Sub Status(Code As Integer, Optional Cause As String)
 
-  Dim Responder As New Responder("application/json", Code)
+  Dim Responder As New Responder '"application/json", Code)
+
+  Responder.ContentType = "application/json"
+  Responder.Status = Code
   If Cause Then Responder.WriteLine(JSON.Encode(["error": Cause]))
   Responder.Respond
 
@@ -85,7 +88,7 @@ Public Sub LogIt()
 
   If Not Exist(User.home &/ "logs") Then Mkdir User.home &/ "logs"
   If Exist(User.home &/ "logs/log.csv") Then sStore = File.Load(User.home &/ "logs/log.csv")
-  sStore &= Format(Now, "dddd dd/mm/yyyy - hh:nn:ss") & "," & CGI!REMOTE_ADDR & "," CGI!PATH_INFO & gb.NewLine
+  sStore &= Format(Now, "dddd dd/mm/yyyy - hh:nn:ss") & "," & CGI!REMOTE_ADDR & "," & CGI!PATH_INFO & gb.NewLine
   File.Save(User.Home &/ "logs/log.csv", sStore)
 
 End
