@@ -1,13 +1,13 @@
-ContentType As String
-Content As String
-Status As Integer
+Public ContentType As String
+Public Content As String
+Public Status As Integer
 
-Sub init(OPTIONAL sContentType As String = "text/plain", iStatus = 0)
+Sub init(Optional sContentType As String = "text/plain",Optional iStatus = 0)
   Me.ContentType = sContentType
   Me.Status = iStatus
 End
 
-Public Sub Write(Value As as String)
+Public Sub Write(Value As String)
   Content &= Value
 End
 
@@ -15,7 +15,14 @@ Public Sub WriteLine(Value As String)
   Content &= Value & gb.NewLine
 End
 
-Public Sub Send(Optional ClearAfterSend) As Boolean = False)
+Public FromFile(FileName as String)
+  If lcase(FileName) Ends "html"
+    Me.ContentType = "text/html"
+  EndIf
+  Me.Content &= File.Load(FileName)
+End
+
+Public Sub Respond(Optional ClearAfterSend) As Boolean = False)
   Response.Begin
   Response.Status = Me.Status
   Response.AddHeader("Access-Control-Allow-Origin", "*")

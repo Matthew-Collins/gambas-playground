@@ -2,7 +2,7 @@
 
 Public Sub Main()
 
-  Dim Stream As Stream
+  Dim Responder As Responder
 
   LogIt
   
@@ -17,7 +17,9 @@ Public Sub Main()
         ScriptController.RunScript(GetGist(RequestUtils.Parameter("gist")), True)
 
       Else
-        Status(405)
+        Responder = New Responder
+        Responder.LoadFile("Lite.html")
+        Responder.Respond
 
       Endif
 
@@ -28,11 +30,11 @@ Public Sub Main()
       ScriptController.RunScript(File.Load("BigTest.gbs"), True)
 
     Case "/info"
-      Stream = New Stream
-      Stream.WriteLine("User: " & User.Name)
-      Stream.WriteLine("Time: " & Now)
-      Stream.WriteLine("IP:   " & CGI!REMOTE_ADDR)
-      Stream.Send
+      Responder = New Responder
+      Responder.WriteLine("User: " & User.Name)
+      Responder.WriteLine("Time: " & Now)
+      Responder.WriteLine("IP:   " & CGI!REMOTE_ADDR)
+      Responder.Respond
       
     Default
       Status(404)
@@ -42,9 +44,9 @@ End
 
 Private Sub Status(Code As Integer, Optional Cause As String)
 
-  Dim Stream As New Stream("application/json", Code)
-  If Cause Then Stream.WriteLine(JSON.Encode(["error": Cause]))
-  Stream.Send
+  Dim Responder As New Responder("application/json", Code)
+  If Cause Then Responder.WriteLine(JSON.Encode(["error": Cause]))
+  Responder.Respond
 
 End
 
