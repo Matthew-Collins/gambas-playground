@@ -8,7 +8,7 @@ Private $timeout As New Timer As "Timeout"
 Private $sContainerId As String
 Private $iStdoutLen As Integer
 
-Private Stream as New Stream
+Private Responder as New Responder
 
 Public Sub RunScript(Optional Code As String = "", ShowCodeDefault as Boolean= False) 
 
@@ -17,14 +17,14 @@ Public Sub RunScript(Optional Code As String = "", ShowCodeDefault as Boolean= F
   Endif
 
   If RequestUtils.IsParameter("ShowCode", ShowCodeDefault) Then
-    Stream.WriteLine("Code:" & gb.NewLine)
-    Stream.WriteLine(Code)
-    Stream.Send
+    Responder.WriteLine("Code:" & gb.NewLine)
+    Responder.WriteLine(Code)
+    Responder.Respond
   End if
   
   Stream.WriteLine("Result:")
   If Not stdin Then
-    Stream.Send
+    Responder.Respond
     Return
   Endif
 
@@ -56,12 +56,12 @@ Public Sub Runner_Read()
   Dim len As Integer = Lof($runner)
 
   If len + $iStdoutLen > STDOUT_LIMIT Then
-    Print Read #$runner, - STDOUT_LIMIT - $iStdoutLen
-    Print "-----8<----- Output has been truncated ("; STDOUT_LIMIT; " bytes max) -----8<-----"
+    Responder.Write(Read #$runner, - STDOUT_LIMIT - $iStdoutLen)
+    Responder.WriteLine("-----8<----- Output has been truncated ("; STDOUT_LIMIT; " bytes max) -----8<-----")
     $runner.Close
     $runner.Kill
   Else
-    Print Read #$runner, len;
+    Ressponder.Write(Print Read #$runner, len)
     $iStdoutLen += len
   Endif
 
@@ -69,13 +69,13 @@ End
 
 Public Sub Runner_Error(stderr As String)
 
-  Stream.Write(Print stderr)
+  Responder.Write(Print stderr)
 
 End
 
 Public Sub Runner_Kill()
 
-  Stream.Send
+  Responder.Respond
   $timeout.Stop
   Exec ["docker", "rm", "--force", $sContainerId] For Read
 
