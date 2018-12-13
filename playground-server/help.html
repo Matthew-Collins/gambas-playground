@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="icon" href="wiki/logo.png" type="image/png">
+  <title>Gambas Documentation - /playground</title>
+</head>
+
+<body>
+
+
+<div id="page-frame">
+<form name="form" method="post" enctype="multipart/form-data">
+
+<h1>The Gambas Playground</h1>
+<p>The Gambas Playground is a small web tool to write, run and share Gambas code Snippets. 
+<a id="t1"></a><h2>Overview</h2>
+<p>The Playground allows you to write a small Gambas script using an in-browser editor, then run it on the Playground's server and see the output of the script, without needing to install anything.</p>
+<p>It also allows you to share links that point directly to your code on the Playground, using <a href="https://gist.github.com/" target="_blank">GitHub's Gist service</a>.</p>
+<h3>Example</h3>
+<div><div class="code gambas">
+<pre><span style="color:black;"></span><span style=""><b>Dim</b> i <b>As</b> </span><span style="color:#DF6B00"><b>Integer</b>
+
+</span><span style=""><b>For</b> i <b>=</b> </span><span style="color:#FF0000"><b>1</b></span><span style=""> <b>To</b> </span><span style="color:#FF0000"><b>10</b>
+</span><span style="">    <b>Print</b> </span><span style="color:#7F0000">&quot;Count to &quot;</span><span style=""><b>;</b> i
+<b>Next</b>
+</span></pre>
+</div></div>
+<p>A simple script that counts from <code style="white-space:nowrap;">1</code> to <code style="white-space:nowrap;">10</code>. <a href="../playground/?gist=07db52169ef8b747d26f8bee4a4a19e9" target="_blank">Playground link</a></p>
+<a id="t2"></a><h2>Using components</h2>
+<p>Gambas components can be used in the Playground using the <code style="white-space:nowrap;">USE</code> keyword, like any other Gambas script.</p>
+<p>However, since Playground code snippets run in a completely isolated environment, components that rely on User Interfaces (GUI or CLI) or networking (HTTP, FTP, Databases …) are not available.</p>
+<a id="t3"></a><h3>Example</h3>
+<div><div class="code gambas">
+<pre><span style="color:black;"></span><span style=""><b>Use</b> </span><span style="color:#7F0000">&quot;gb.xml&quot;
+
+</span><span style=""><b>Dim</b> doc <b>As</b> <b>New</b> </span><span style="color:#DF6B00"><b>XmlDocument</b>
+</span><span style=""><b>Print</b> doc<b>.</b>ToString<b>(</b><b>True</b><b>)</b>
+</span></pre>
+</div></div>
+<p>This script creates an empty XML Document using the <code style="white-space:nowrap;">gb.xml</code> component, and then prints its contents (with formatting enabled). <a href="../playground/?gist=8a49aae5f5e24569c3f7f7e55c619f05" target="_blank">Playground link</a></p>
+<a id="t4"></a><h3>Available Components</h3>
+<p>The following components are currently available in the playground :</p>
+<p>gb.args, gb.clipper, gb.complex, gb.compress, gb.data, gb.eval, gb.eval.highlight,  gb.image.effect, gb.image, gb.inotify, gb.markdown, gb.option, gb.settings, gb.signal, gb.util, gb.util.web, gb.vb, gb.xml, gb.xml.html</p>
+<a id="t5"></a><h2>Limitations</h2>
+<p>Since this web service is literally about arbitrary code execution, a few limitations are in place in order to prevent abuse.</p>
+<p>Although these should not bother you in most cases, you might want to keep them in mind shall you try to run some computationally expensive code.</p>
+<ul>
+  <li>
+<p><strong>Time limit</strong> : Scripts cannot run for more than 5 seconds. Scripts          exceeding this limit will get killed (i.e. the Gambas interpreter will receive a <code style="white-space:nowrap;">SIGKILL</code> signal, denying any kind of recovery).</p>
+  </li>
+  <li>
+<p><strong>Memory limit</strong> : Script cannot allocate more than <code style="white-space:nowrap;">16 MiB</code> of RAM. Doing so will cause the kernel to raise a <code style="white-space:nowrap;">SIGSEGV</code> signal (segmentation fault), hence killing the script. Note that this limit is set for the whole environment, therefore the Gambas runtime's memory overhead is also counted towards this limit.</p>
+  </li>
+  <li>
+<p><strong>Network limitations</strong> : No network access is possible : no network card is accessible, and sockets cannot be opened.</p>
+  </li>
+  <li>
+<p><strong>Filesystem limitations</strong> : While any file in the filesystem can be read from, written to, created or deleted, all changes will be discarded when the script ends. Files should therefore be used only as temporary storage.</p>
+  </li>
+  <li>
+<p><strong>Output size limit</strong> : The standard output is forwarded to the browser up to the 4096th byte. Any following output will be discarded.</p>
+  </li>
+  </ul>
+<a id="t6"></a><h2>Code storage</h2>
+<p>The last edited snippet is locally saved into the browser's <code style="white-space:nowrap;">LocalStorage</code> and restored when opening the playground (if not from a shared link).
+This prevents some unfortunate accidents, such as power outages, browser crashes, and chair/keyboard interface defects.</p>
+     
+<div></div>
+
+</div>
+
+</form>
+</div>
+
+</body>
+</html>
+

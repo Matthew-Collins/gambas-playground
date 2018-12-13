@@ -6,7 +6,6 @@ Public Sub Main()
 
   LogIt
 
-  Print CGI!PATH_INFO
   Select Case LCase(CGI!PATH_INFO)
 
     Case "/"
@@ -14,20 +13,38 @@ Public Sub Main()
         ScriptController.RunScript()
 
       Else If RequestUtils.ContainsParameter("gist")
-        ScriptController.RunScript(GetGist(RequestUtils.Parameter("gist")), True)
+        ScriptController.RunScript(GitHub.GetGist(RequestUtils.Parameter("gist")), True)
 
       Else
         Responder = New Responder
         Responder.LoadFile("Lite.html")
+        Responder.Content = Replace(Responder.Content, "\"Hello World\"", "\"abc\"")
         Responder.Respond
 
       Endif
+
+    Case "/help.html"
+      Response.SendFile("help.html")
+
+    Case "/favicon.ico"
+      Response.SendFile("favicon.ico")
+
+    Case "/gambas.png"
+      Response.SendFile("gambas.png")
+
+    Case "/playground.css"
+      'Response.SendFile("playground.css")
 
     Case "/test"
       ScriptController.RunScript("Print \"Hello world from Gambas Playground Server!\"")
 
     Case "/bigtest"
       ScriptController.RunScript(File.Load("BigTest.gbs"), True)
+
+    Case "/echo"
+      Responder = New Responder
+      Responder.Write(RequestUtils.Body)
+      Responder.Respond
 
     Case "/info"
       Responder = New Responder
@@ -44,41 +61,12 @@ End
 
 Private Sub Status(Code As Integer, Optional Cause As String)
 
-  Dim Responder As New Responder '"application/json", Code)
+  Dim Responder As New Responder
 
   Responder.ContentType = "application/json"
   Responder.Status = Code
   If Cause Then Responder.WriteLine(JSON.Encode(["error": Cause]))
   Responder.Respond
-
-End
-
-Public Sub GetGist(GistId As String) As String                                  'To 'Get' stuff from the web
-
-  Dim hClient As HttpClient                                                     'To create a HTTP Client
-  Dim sResult As String
-  Dim vResult As Variant
-  Dim sContent As String
-  Dim vFile As Variant
-
-  hClient = New HttpClient As "hClient"                                         'Create a HTTP Client
-  With hClient                                                                  'With the Client..
-    .URL = "https://api.github.com/gists/" & GistId                             'Set up the URL
-    .Async = False                                                              'No Asynchronous transmission
-    .TimeOut = 60                                                               'Don't hang around waiting for more than 60 seconds
-    .get                                                                        'Get the data
-  End With
-
-  If Lof(hClient) Then sResult = Read #hClient, Lof(hClient)                    'When all the data is downloaded store it in sResult
-
-  vResult = JSON.Decode(sResult, False)
-
-  For Each vFile In vResult["files"]
-    sContent = vFile["content"]
-    Break
-  Next
-
-  Return sContent
 
 End
 

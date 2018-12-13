@@ -30,13 +30,6 @@ Public Sub LoadFile(FileName As String)
 
 End
 
-Public Sub SendFile(FileName)
-  Response.Begin
-  Response.Status = Me.Status
-  Response.AddHeader("Access-Control-Allow-Origin", "*")
-  Response.SendFile(FileName)
-End
-
 Public Sub Respond(Optional ClearAfterSend As Boolean = False)
 
   Response.Begin
@@ -48,6 +41,7 @@ Public Sub Respond(Optional ClearAfterSend As Boolean = False)
   If ClearAfterSend Then
     Me.Clear
   Endif
+
 End
 
 Public Sub Clear()

@@ -1,0 +1,187 @@
+@keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+html, body, #main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    margin: 0;
+}
+
+body {
+    background: #FFA500 url('gambas.png') no-repeat right -40px;
+}
+
+#main, #output {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+header, #output h2 {
+    flex: none;
+}
+
+#output h2 {
+    text-align: center;
+    color: #2980b9;
+    padding: .5em;
+    font-size: 12pt;
+    border-bottom: 0;
+}
+
+#output h2 button {
+    background: 0;
+    border: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: .5em 1em;
+    cursor: pointer;
+    color: #666;
+}
+
+#output h2 button:hover {
+    color: #222;
+    background: #eee;
+}
+
+.r_flex_expand_child, #main, #code, #output, #output-contents {
+    flex:auto;
+    overflow-y:scroll;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#main {
+    flex-direction: row;
+    padding: 1%;
+}
+
+#code {
+    border: solid 1px #2980b9;
+    border-radius: 9px;
+}
+
+#code {
+    font-family: "Source Code Pro", monospace;
+    min-width: 50%;
+    margin-right: .5%;
+    font-size: 11pt;
+}
+
+#output {
+    margin-left: .5%;
+    border: solid 1px #aaa;
+    background: #fff;
+    border-radius: 9px;
+    display: none;
+}
+
+#output.visible {
+    display: flex;
+}
+
+#output-contents {
+    font-family: "Source Code Pro", monospace;
+    white-space: pre;
+    overflow: auto;
+    padding: .5em;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: .5em 1em;
+}
+
+header button, header nav a {
+    display: inline-block;
+    background: white;
+    border: solid 1px #2980b9;
+    border-radius: 5px;
+    padding: .25em 1em;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 12pt;
+    transition: all .25s ease-in-out;
+}
+
+header nav {
+    margin: 0 250px 0 auto;
+}
+
+header nav a {
+    background: #e1ddd9;
+    border: 0;
+    color: #222;
+}
+
+header nav a:hover {
+    color: #2980b9;
+}
+
+#run-code {
+    background: #00FF7F;
+    border-color: #000000;
+    color: black;
+    font-weight: bold;
+    font-size: 14pt;
+    margin-right: 3em;
+}
+
+#run-code:hover {
+    background: white;
+    color: #e88b39;
+}
+
+.loading {
+    position: relative;
+}
+
+.loading:before {
+    display: block;
+    content: "";
+    position: absolute;
+    background: rgba(255,255,255,.5);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 42;
+}
+
+.loading:after {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: solid 3px #e1ddd9;
+    height: 48px;
+    width: 48px;
+    border-top-color: #e88b39;
+    z-index: 42;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: spinner 1.1s infinite linear;
+    animation: spinner 1.1s infinite linear;
+    border-radius: 50%;
+}

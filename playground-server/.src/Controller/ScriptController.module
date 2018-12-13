@@ -31,8 +31,6 @@ Public Sub RunScript(Optional Code As String = "", ShowCodeDefault As Boolean = 
   Shell "docker create --cap-drop=ALL --cpus=1 --memory=16m --net=none --pids-limit=20 --security-opt=no-new-privileges --interactive gbs3" To $sContainerId
   $sContainerId = Trim($sContainerId)
 
-  Print "Container: " & $sContainerId
-
   If Not Exist(User.home &/ "scripts") Then Mkdir User.home &/ "scripts"
   File.Save(User.home &/ "scripts" &/ $sContainerId & ".gbs", Code)
   Shell "docker cp " &/ User.home &/ "scripts" &/ $sContainerId & ".gbs " & $sContainerId & ":script.gbs" Wait
