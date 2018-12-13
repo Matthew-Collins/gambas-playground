@@ -25,11 +25,16 @@ End
 
 Public Sub LoadFile(FileName As String)
 
-  If LCase(FileName) Ends "html"
-    Me.ContentType = "text/html"
-  Endif
+  Me.ContentType = Response.GetContentTypeFrom(FileName)
   Me.Content &= File.Load(FileName)
 
+End
+
+Public Sub SendFile(FileName)
+  Response.Begin
+  Response.Status = Me.Status
+  Response.AddHeader("Access-Control-Allow-Origin", "*")
+  Response.SendFile(FileName)
 End
 
 Public Sub Respond(Optional ClearAfterSend As Boolean = False)
@@ -43,7 +48,6 @@ Public Sub Respond(Optional ClearAfterSend As Boolean = False)
   If ClearAfterSend Then
     Me.Clear
   Endif
-
 End
 
 Public Sub Clear()
