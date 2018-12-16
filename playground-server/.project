@@ -1,7 +1,7 @@
 # Gambas Project File 3.0
 Startup=Router
 UseHttpServer=1
-Version=0.0.15
+Version=0.0.19
 Component=gb.net
 Component=gb.net.curl
 Component=gb.util.web
