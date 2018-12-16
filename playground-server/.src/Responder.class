@@ -32,10 +32,10 @@ End
 
 Public Sub Respond(Optional ClearAfterSend As Boolean = False)
 
-  Response.Begin
-  Response.Status = Me.Status
   Response.AddHeader("Access-Control-Allow-Origin", "*")
   Response.ContentType = Me.ContentType
+  Response.Status = Me.Status
+  Response.Begin
   Print Content
   Response.End
   If ClearAfterSend Then
