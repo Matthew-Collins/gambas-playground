@@ -19,10 +19,9 @@ Public Sub RunScript(Optional Code As String = "", ShowCodeDefault As Boolean = 
   If RequestUtils.IsParameter("ShowCode", ShowCodeDefault) Then
     Responder.WriteLine("Code:" & gb.NewLine)
     Responder.WriteLine(Code)
-    Responder.Respond
+    Responder.WriteLine("Result:")
   End If
 
-  Responder.WriteLine("Result:")
   If Not Code Then
     Responder.Respond
     Return
@@ -84,7 +83,7 @@ End
 
 Public Sub Timeout_Timer()
 
-  Stream.WriteLine("\nProcess timed out !")
+  Responder.WriteLine("\nProcess timed out !")
   Exec ["docker", "kill", $sContainerId] For Read
   $runner.Kill
 
