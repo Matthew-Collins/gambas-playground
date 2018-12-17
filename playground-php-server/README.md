@@ -5,7 +5,7 @@ Add User to existing Docker Group:
 sudo usermod -aG docker www-data
 
 
-Copy run.php to: 
+Copy *.* to: 
 
 /var/www/html/playground
 
