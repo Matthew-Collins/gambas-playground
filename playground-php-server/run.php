@@ -16,7 +16,7 @@
     unlink('/scripts/' . $container . '.gbs');
 
     // Start Container 
-    $output = exec('docker start --attach --interactive ' . $container);
+    $output = passthru('docker start --attach --interactive ' . $container);
     echo $output;
 
 ?>

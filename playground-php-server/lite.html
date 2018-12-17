@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gambas Playground</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
      
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -46,7 +47,10 @@
       </tr>
       <tr height="100%">
         <td>
-          <textarea id="code">Print "Hello World"</textarea>
+          <textarea id="code">Dim x as Integer
+For x = 1 to 10
+    Print "Hello World: " & x
+Next</textarea>
         </td>
         <td>
           <textarea id="output-contents"></textarea>
