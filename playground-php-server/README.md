@@ -5,8 +5,6 @@ Add User to existing Docker Group:
 sudo usermod -aG docker www-data
 
 
-Copy *.* to: 
+Copy all files to: 
 
 /var/www/html/playground
-
-
