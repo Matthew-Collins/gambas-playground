@@ -9,12 +9,29 @@
 
     <script>
         $(document).ready(function(){
+
+            let url = new URLSearchParams(location.search);
+
+            if (url.has("gist")) {
+                $.get("https://api.github.com/gists/" + url.get("gist"), function(data, status){                  
+                    if (status == "success") {
+                        for (var name in data.files) {
+                            if (data.files.hasOwnProperty(name)) {
+                                $("#code").text(data.files[name].content);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+
             $("#run-code").click(function(){         
                 $("#output-contents").text("Loading...");
                 $.post("run.php", $("#code").val(), function(result){
                     $("#output-contents").text(result);
                 });
             });
+
         });
     </script>
     
