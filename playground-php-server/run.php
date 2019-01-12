@@ -15,8 +15,10 @@
     // Delete Script File
     unlink('/scripts/' . $container . '.gbs');
 
+    // Schedule Remove of Container (remove www-data from: etc\at.deny)
+    exec('echo "sleep 5;docker container rm ' . $container . ' --force" | at now');
+
     // Start Container 
-    $output = passthru('docker start --attach --interactive ' . $container);
-    echo $output;
+    passthru('docker start --attach --interactive ' . $container);
 
 ?>
