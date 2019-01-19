@@ -19,6 +19,6 @@
     exec('echo "sleep 5;docker container rm ' . $container . ' --force" | at now');
 
     // Start Container 
-    passthru('docker start --attach --interactive ' . $container);
+    passthru('docker start --attach --interactive ' . $container . ' 2>&1');
 
 ?>
