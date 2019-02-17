@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0037)http://gambaswiki.org/wiki/lang/cbyte -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <link rel="stylesheet" href="http://gambaswiki.org/wiki/style.css">
+      <link rel="icon" href="http://gambaswiki.org/wiki/logo.png" type="image/png">
+  <title>Gambas Documentation - /lang/cbyte</title>
+
+
+
+  </head>
+
+<body>
+
+
+<div id="page-frame">
+<form name="form" method="post" enctype="multipart/form-data">
+
+
+
+<div class="header">
+
+  <div class="header-inside">
+  
+    <div class="header-bar">
+      <div class="up">
+                  <a href="http://gambaswiki.org/wiki"><img src="http://gambaswiki.org/wiki/up.png"></a>
+              </div>
+            <div class="title">
+        <a href="http://gambaswiki.org/wiki/lang">lang</a>&nbsp;•&nbsp;<a href="http://gambaswiki.org/wiki/lang/cbyte">cbyte</a>      </div>
+                  <div style="float:right;">
+              <div class="command"><input type="submit" name="ident" value="Login"></div>
+            <select id="lang" name="lang" onchange="document.form.submit();">
+<option value="ar">ar</option>
+<option value="ca">ca</option>
+<option value="cs">cs</option>
+<option value="de">de</option>
+<option value="en" selected="">en</option>
+<option value="eo">eo</option>
+<option value="es">es</option>
+<option value="fa">fa</option>
+<option value="fr">fr</option>
+<option value="hu">hu</option>
+<option value="id">id</option>
+<option value="it">it</option>
+<option value="ja">ja</option>
+<option value="ko">ko</option>
+<option value="mk">mk</option>
+<option value="nl">nl</option>
+<option value="pl">pl</option>
+<option value="pt">pt</option>
+<option value="pt_BR">pt_BR</option>
+<option value="ru">ru</option>
+<option value="sq">sq</option>
+<option value="tr">tr</option>
+<option value="vi">vi</option>
+<option value="zh">zh</option>
+<option value="zh_TW">zh_TW</option>
+</select>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+
+
+
+<div id="page" class="page">
+
+
+
+      <h1>CByte</h1>
+<div><div class="syntax">
+<p><u>Byte</u> <strong>= CByte (</strong> <u>Expression</u> AS Variant <strong>)</strong> AS Byte</p>
+</div></div>
+<p>Converts an expression into a byte.</p>
+<p><u>Expression</u> is first converted into an integer. Then, if this integer overflows the byte range, it is truncated.</p>
+<h3>Errors</h3>
+<table class="error">
+<tbody><tr><th>
+<p>Message</p>
+</th><th>
+Description
+</th></tr>
+<tr><td>
+<a href="http://gambaswiki.org/wiki/error/type">Type mismatch (6)</a>
+</td><td>
+<u>Expression</u> cannot be converted.
+</td></tr>
+</tbody></table>
+<h3>Examples</h3>
+<div><div class="code gambas">
+<pre><span style="color:black;"></span><span style=""><b>Print</b> </span><span style="color:#3398C3"><b>CByte</b></span><span style=""><b>(</b></span><span style="color:#7F0000">"17"</span><span style=""><b>)</b>
+</span></pre>
+</div></div>
+<div><div class="result">
+<div><pre><code>17
+</code></pre></div>
+</div></div>
+<div><div class="code gambas">
+<pre><span style="color:black;"></span><span style=""><b>Print</b> </span><span style="color:#3398C3"><b>CByte</b></span><span style=""><b>(</b></span><span style="color:#FF0000"><b>100000</b></span><span style=""><b>)</b>
+</span></pre>
+</div></div>
+<div><div class="result">
+<div><pre><code>160
+</code></pre></div>
+</div></div>
+<div><div class="code gambas">
+<pre><span style="color:black;"></span><span style=""><b>Print</b> </span><span style="color:#3398C3"><b>CByte</b></span><span style=""><b>(</b><b>True</b><b>)</b>
+</span></pre>
+</div></div>
+<div><div class="result">
+<div><pre><code>255
+</code></pre></div>
+</div></div>
+<h3>See also</h3>
+<div><div class="seealso">
+<ul>
+  <li>
+<p><a href="http://gambaswiki.org/wiki/cat/conv">Conversion Functions</a></p>
+  </li>
+  </ul>
+</div></div>
+    <p></p>
+          <script type="text/javascript">
+        try { document.getElementById('login').focus(); } catch(e) {}
+      </script>
+      
+<div></div>
+
+</div>
+
+<script src="wiki.js"></script>
+</form>
+</div>
+
+
+
+
+</body></html>
