@@ -4,7 +4,7 @@ The Gambas Playground is a small web tool to write, run and share Gambas code Sn
 
 It is currently hosted here: 
 
-http:/gambas.one/playground
+http://gambas.one/playground
 
 For more details on how to use:
 
