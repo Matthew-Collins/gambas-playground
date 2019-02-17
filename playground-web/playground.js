@@ -14,21 +14,27 @@ function setLocalStorage(key, value) {
 
 document.addEventListener("DOMContentLoaded", function() {
 	'use strict';
-	var REMOTE_URI = location.href.indexOf("file://") !== -1 ? 'http://localhost:8080/' : '/run';
+	var REMOTE_URI = 'http://localhost/Gambas/playground-php-server/run.php';
 	var outputContainer = document.getElementById('output');
 	var outputContents = document.getElementById('output-contents');
 	var runButton = document.getElementById('run-code');
-	var gistButton = document.getElementById('gist-button');
+	//var gistButton = document.getElementById('gist-button');
 	var closeOutputButton = document.getElementById('close-output');
 	var editorElement = document.getElementById('code');
 	var editor = ace.edit('code');
 	editor.$blockScrolling = Infinity;
 	editor.getSession().setMode('ace/mode/vbscript');
 	runButton.addEventListener('click', runCode);
-	gistButton.addEventListener('click', sendGist);
+	//gistButton.addEventListener('click', sendGist);
 	closeOutputButton.addEventListener('click', function() {
 		outputContainer.className = '';
 	});
+    document.addEventListener('keydown', function(event){
+        switch (event.keyCode) {
+            case 115: //f4
+                runCode();
+            }
+    });
 
 	function runCode() {
 		var xhr = new XMLHttpRequest();
