@@ -7,18 +7,27 @@
      
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <script src="vendor/ace.js"></script>
+    <script src="vendor/mode-vbscript.js"></script>
+
     <script>
         $(document).ready(function(){
 
             let url = new URLSearchParams(location.search);
             var REMOTE_URI = 'http://localhost/Gambas/playground-php-server/run.php'
 
+            var editor = ace.edit('code');
+            editor.$blockScrolling = Infinity;
+            editor.getSession().setMode('ace/mode/vbscript');
+            editor.setShowPrintMargin(false);
+            editor.setValue('Print "Hello World"');
+
             if (url.has("gist")) {
                 $.get("https://api.github.com/gists/" + url.get("gist"), function(data, status){                  
                     if (status == "success") {
                         for (var name in data.files) {
                             if (data.files.hasOwnProperty(name)) {
-                                $("#code").text(data.files[name].content);
+                                editor.setValue(data.files[name].content);
                                 break;
                             }
                         }
@@ -37,7 +46,7 @@
 
             function RunCode(){         
                 $("#output-contents").text("Loading...");
-                $.post(REMOTE_URI, $("#code").val(), function(result){
+                $.post(REMOTE_URI, editor.getValue(), function(result){
                     $("#output-contents").text(result);
                 });
             }
@@ -61,27 +70,32 @@
             padding:3px;
             resize:none;
         }
+        #code {
+            height: 100%;
+            width:100%;
+            font-size: 12pt;
+        }
     </style>
 
 </head>
 <body margin="0">
     <table width="100%" height="100%" border="0">
       <tr>
-        <td>
-          <button id="run-code">Run (F4)</button>
+        <td colspan="2">
+          <button id="run-code">Run (F4)</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href = "examplesslim.html"><button>Examples</button></a>&nbsp;&nbsp;
+          <a href = "http://gambaswiki.org/wiki/playground"><button>Help</button></a>&nbsp;&nbsp;
+          <a href = "index.html"><button>Main</button></a>&nbsp;
+          <a href = "lite.html"><button>Lite</button></a>&nbsp;
+          <a href = "ultra.html"><button>Ultra</button></a>&nbsp;
+          <a href = "mobile.html"><button>Mobile</button></a>
         </td>
-        <td align="right">
-          <a href="help.html">Help</a>
+     </tr>
+     <tr height="100%">
+         <td width="50%">
+          <div id="code"></div>
         </td>
-      </tr>
-      <tr height="100%">
-        <td>
-          <textarea id="code">Dim x as Integer
-For x = 1 to 10
-    Print "Hello World: " & x
-Next</textarea>
-        </td>
-        <td>
+        <td width="50%">
           <textarea id="output-contents"></textarea>
         </td>
       </tr>

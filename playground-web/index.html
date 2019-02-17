@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Gambas Playground</title>
-    <script src="vendor/ace.js"></script>
-    <script src="vendor/mode-vbscript.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="playground.js"></script>
+    <script type="text/javascript" src="vendor/ace.js"></script>
+    <script type="text/javascript" src="vendor/mode-vbscript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="playground.js"></script>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="playground.css" />
+
 </head>
 <body>
     <header>
-        <button id="run-code">Run !</button>
+        <button id="run-code">Run (F4)</button>
         <button id="gist-button" style="display:none">Gist</button>
-        <nav><a href="help.html">Help</a></nav>
+        <a href = "examples.html"><button>Examples</button></a>&nbsp;&nbsp;
+        <a href = "http://gambaswiki.org/wiki/playground"><button>Help</button></a>&nbsp;&nbsp;
+        <a href = "lite.html"><button>Lite</button></a>&nbsp;
+        <a href = "slim.html"><button>Slim</button></a>&nbsp;
+        <a href = "ultra.html"><button>Ultra</button></a>&nbsp;
+        <a href = "mobile.html"><button>Mobile</button></a>
     </header>
     <div id="main">
         <div id="code"></div>
