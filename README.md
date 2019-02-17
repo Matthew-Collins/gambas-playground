@@ -4,8 +4,8 @@ The Gambas Playground is a small web tool to write, run and share Gambas code Sn
 
 It is currently hosted here: 
 
-https://gambas-playground.proko.eu - currently experiencing issues with https certificate, running code & saving gists.
+http:/gambas.one/playground
 
 For more details on how to use:
 
-http://gambaswiki.org/wiki/playground?nh
+http://gambaswiki.org/wiki/playground
