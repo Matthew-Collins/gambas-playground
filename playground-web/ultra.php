@@ -31,11 +31,13 @@
                     }
                 });
 	        } else {
-		        var savedCode = getLocalStorage('code');
-		        if (savedCode) {
-			        editor.setValue(savedCode);
-		        } else {
-			        editor.setValue('Shell "gbs3 --version"');
+	        	if (editor.getValue() == '') {
+		        	var savedCode = getLocalStorage('code');
+		        	if (savedCode) {
+			        	editor.setValue(savedCode);
+		        	} else {
+			        	editor.setValue('Shell "gbs3 --version"');
+		        	}
 		        }
 	        }
 
