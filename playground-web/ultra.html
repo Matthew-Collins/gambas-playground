@@ -30,7 +30,14 @@
                         }
                     }
                 });
-            }
+	        } else {
+		        var savedCode = getLocalStorage('code');
+		        if (savedCode) {
+			        editor.setValue(savedCode);
+		        } else {
+			        editor.setValue('Shell "gbs3 --version"');
+		        }
+	        }
 
             $("#run-code").click(RunCode);
 
@@ -46,6 +53,30 @@
                 $.post(REMOTE_URI, editor.getValue(), function(result){
                     $("#output-contents").text(result);
                 });
+            }
+
+	        var typingTimeout = null;
+	        editor.on("change", function() {
+		        if(!typingTimeout) {
+			        typingTimeout = setTimeout(function() {
+				        typingTimeout = null;
+				        setLocalStorage('code', editor.getValue());
+			        }, 1000);
+		        }
+	        });
+
+            function getLocalStorage(key) {
+	            try {
+		            return localStorage.getItem(key);
+	            } catch(e) {
+		            return null;
+	            }
+            }
+
+            function setLocalStorage(key, value) {
+	            try {
+		            window.localStorage.setItem(key, value);
+	            } catch(e) {}
             }
 
             editor.refresh();
@@ -98,7 +129,7 @@
       </tr>
       <tr height="50%">
         <td>
-            <textarea name="code" id="code">Shell "gbs3 --version"</textarea>
+            <textarea name="code" id="code"></textarea>
         </td>
       </tr>
       <tr height="50%">
