@@ -1,0 +1,71 @@
+#!/usr/bin/env gbs3
+
+Use "gb.eval"
+
+Dim OpeningKeywords As String[] = ["Sub", "Select", "While", "If", "Function", "For", "Repeat"]
+Dim MiddleKeywords As String[] = ["Else If", "Else"]
+Dim EndKeywords As String[] = ["Next", "Loop", "Endif", "Wend", "Until"]
+Dim OperatorKeywords as String[] = ["And If", "Or If", "And", "Or", "Not", "Xor", "In"]
+
+Dim Keywords As String[] = System.Keywords
+Keywords.Add("Else If")
+Keywords.Add("And If")
+Keywords.Add("Or If")
+'Keywords.Sort(gb.descent)
+
+Dim Datatypes as String[] = System.Datatypes
+Datatypes.Sort
+
+For Each Datatype As String in DataTypes
+    'Print Datatype
+    Keywords.Remove(Keywords.Find(DataType))
+Next
+For Each OpeningKeyword As String in OpeningKeywords
+    'Print OpeningKeyword    
+    Keywords.Remove(Keywords.Find(OpeningKeyword))
+Next
+For Each MiddleKeyword As String in MiddleKeywords
+    'Print MiddleKeyword
+    Keywords.Remove(Keywords.Find(MiddleKeyword))
+Next
+For Each EndKeyword As String in EndKeywords
+    'Print EndKeyword    
+    Keywords.Remove(Keywords.Find(EndKeyword))
+Next
+For Each OperatorKeyword As String in OperatorKeywords
+    'Print OperatorKeyword    
+    Keywords.Remove(Keywords.Find(OperatorKeyword))
+Next
+
+Dim AllKeywords As String = lcase("'" & Keywords.Join("', '") & "'")
+Dim AllDatatypes As String = lcase("'" & DataTypes.Join("', '") & "'")
+Dim AllOpeningKeywords As String = lcase("'" & OpeningKeywords.Join("', '") & "'")
+Dim AllMiddleKeywords As String = lcase("'" & MiddleKeywords.Join("', '") & "'")
+Dim AllEndKeywords As String = lcase("'" & EndKeywords.Join("', '") & "'")
+Dim AllOperatorKeywords As String = lcase("'" & OperatorKeywords.Join("', '") & "'")
+
+Dim FileName As String = Application.Dir &/ "gambas.js"
+Dim Lines As String[] = Split(File.Load(FileName), gb.NewLine)
+Dim NewLines As New String[]
+
+For Each sLine As String in Lines
+    If Trim(sLine) Begins "var commonKeywords"
+        NewLines.Add("    var commonKeywords = [" & AllKeywords & "];")
+    Else If Trim(sLine) Begins "var commontypes"
+        NewLines.Add("    var commontypes = [" & AllDatatypes & "];")
+    Else If Trim(sLine) Begins "var openingKeywords"
+        NewLines.Add("    var openingKeywords = [" & AllOpeningKeywords & "];")
+    Else If Trim(sLine) Begins "var middleKeywords"
+        NewLines.Add("    var middleKeywords = [" & AllMiddleKeywords & "];")
+    Else If Trim(sLine) Begins "var endKeywords"
+        NewLines.Add("    var endKeywords = [" & AllEndKeywords & "];")
+    Else If Trim(sLine) Begins "var operatorKeywords"
+        NewLines.Add("    var operatorKeywords = [" & AllOperatorKeywords & "];")
+    Else
+        NewLines.Add(sLine)
+    End If
+Next
+
+File.Save(FileName, NewLines.Join(gb.NewLine))
+
+Print "Done"

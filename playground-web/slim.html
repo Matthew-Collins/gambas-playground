@@ -13,7 +13,6 @@
     <script>
         $(document).ready(function(){
 
-            let url = new URLSearchParams(location.search);
             var REMOTE_URI = 'http://localhost/Gambas/playground-php-server/run.php'
 
             var editor = ace.edit('code');
@@ -22,8 +21,9 @@
             editor.setShowPrintMargin(false);
             editor.setValue('Print "Hello World"');
 
-            if (url.has("gist")) {
-                $.get("https://api.github.com/gists/" + url.get("gist"), function(data, status){                  
+            var url = getQueryParameters();  
+            if (url.gist) {
+                $.get("https://api.github.com/gists/" + url.gist, function(data, status){                  
                     if (status == "success") {
                         for (var name in data.files) {
                             if (data.files.hasOwnProperty(name)) {
@@ -33,14 +33,26 @@
                         }
                     }
                 });
-	        } else {
-		        var savedCode = getLocalStorage('code');
-		        if (savedCode) {
-			        editor.setValue(savedCode);
-		        } else {
-			        editor.setValue('Shell "gbs3 --version"');
-		        }
-	        }
+            } else {
+                var savedCode = getLocalStorage('code');
+                if (savedCode) {
+                    editor.setValue(savedCode);
+                } else {
+                    editor.setValue('Shell "gbs3 --version"');
+                }
+            }
+
+            function getQueryParameters() {
+                var a = window.location.search.substr(1).split('&');
+                if (a === "") return {};
+                var b = {};
+                for (var i = 0; i < a.length; i++) {
+                    var p = a[i].split('=');
+                    if (p.length !== 2) continue;
+                    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+                }
+                return b;
+            }
 
             $("#run-code").click(RunCode);
 
@@ -58,28 +70,28 @@
                 });
             }
 
-	        var typingTimeout = null;
-	        editor.on("change", function() {
-		        if(!typingTimeout) {
-			        typingTimeout = setTimeout(function() {
-				        typingTimeout = null;
-				        setLocalStorage('code', editor.getValue());
-			        }, 1000);
-		        }
-	        });
+            var typingTimeout = null;
+            editor.on("change", function() {
+                if(!typingTimeout) {
+                    typingTimeout = setTimeout(function() {
+                        typingTimeout = null;
+                        setLocalStorage('code', editor.getValue());
+                    }, 1000);
+                }
+            });
 
             function getLocalStorage(key) {
-	            try {
-		            return localStorage.getItem(key);
-	            } catch(e) {
-		            return null;
-	            }
+                try {
+                    return localStorage.getItem(key);
+                } catch(e) {
+                    return null;
+                }
             }
 
             function setLocalStorage(key, value) {
-	            try {
-		            window.localStorage.setItem(key, value);
-	            } catch(e) {}
+                try {
+                    window.localStorage.setItem(key, value);
+                } catch(e) {}
             }
 
         });
