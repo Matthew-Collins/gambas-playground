@@ -63,7 +63,6 @@
             }
 
             $("#select").on("change", function selectTheme(){
-                var input = document.getElementById("select");
                 var theme = $("#select option:selected").text(); 
                 editor.setOption("theme", theme);
                 setLocalStorage('theme', theme);
