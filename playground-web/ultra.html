@@ -60,13 +60,22 @@
             if (savedTheme) {
                 $("#select").val(savedTheme);
                 editor.setOption("theme", savedTheme);
+                syncColors();
             }
 
             $("#select").on("change", function selectTheme(){
                 var theme = $("#select option:selected").text(); 
                 editor.setOption("theme", theme);
                 setLocalStorage('theme', theme);
+                syncColors();
             });
+
+            function syncColors(){
+                $("#output-contents").css("background-color", $(".CodeMirror").css("background-color"));
+                $("#output-contents").css("color", $(".CodeMirror").css("color"));
+                $("#output-contents").css("font-family", $(".CodeMirror").css("font-family"));
+                $("#output-contents").css("font-size", $(".CodeMirror").css("font-size"))
+            }
 
             $("#run-code").click(RunCode);
 
