@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gambas_Playground.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="30">
+
+            <Editor 
+                x:Name="Code"
+                Text="Print &quot;Hello World&quot;"
+                Keyboard="Plain" 
+                AutoSize="TextChanges"
+                FontFamily="Inconsolata" />
+
+            <Button 
+                Text="Run"
+                FontAttributes="Bold"
+                SemanticProperties.Hint="Run Gambas Code in Web Sandbox"
+                Clicked="OnRunCode"
+                HorizontalOptions="Center" />
+
+            <Editor 
+                x:Name="Result"
+                Keyboard="Plain" 
+                AutoSize="TextChanges"
+                IsReadOnly="True"
+                FontFamily="Inconsolata" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
