@@ -8,7 +8,7 @@
 
             <Editor 
                 x:Name="Code"
-                Text="Print &quot;Hello World&quot;"
+                Text="Print &quot;Hello World&quot;&#13;&#10;Print &quot;Hello World&quot;"
                 Keyboard="Plain" 
                 AutoSize="TextChanges"
                 FontFamily="Inconsolata" />
@@ -24,7 +24,6 @@
                 x:Name="Result"
                 Keyboard="Plain" 
                 AutoSize="TextChanges"
-                IsReadOnly="True"
                 FontFamily="Inconsolata" />
 
         </VerticalStackLayout>
